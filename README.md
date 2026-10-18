@@ -78,4 +78,4 @@ jupyter notebook notebooks/
 
 ## Author
 
-Yassine ELAZRI · [LinkedIn](#https://www.linkedin.com/in/moyassine-el/) · [GitHub](#)
+Yassine ELAZRI · [LinkedIn](https://www.linkedin.com/in/moyassine-el/) · [GitHub](#)
