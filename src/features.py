@@ -1,7 +1,7 @@
 """Generic match-level summary features from StatsBomb events."""
 from __future__ import annotations
-
 import pandas as pd
+import numpy as np
 
 ON_TARGET = ["Goal", "Saved", "Saved to Post"]
 
@@ -64,11 +64,9 @@ def xg_timeline(events: pd.DataFrame) -> pd.DataFrame:
     full_range = range(0, int(regular_play(events)["minute"].max()) + 1)
     return per_minute.reindex(full_range, fill_value=0).cumsum()
 
-import numpy as np
-
 
 def passing_network(events: pd.DataFrame, team: str, min_passes: int = 3):
-    """Nodes and edges of a team's pass network (starting XI, before first substitution).
+    """Nodes and edges of a team's pass network (all players).
 
     Needs x, y columns: run add_xy(events) first.
     Returns:
@@ -79,12 +77,11 @@ def passing_network(events: pd.DataFrame, team: str, min_passes: int = 3):
     team_ev = team_ev[team_ev["team"] == team]
 
     subs = team_ev[team_ev["type"] == "Substitution"]
-    cutoff = subs["index"].min() if len(subs) else float("inf")
+    #cutoff = subs["index"].min() if len(subs) else float("inf")
 
     passes = team_ev[
         (team_ev["type"] == "Pass")
         & (team_ev["pass_outcome"].isna())        # no outcome = completed
-        & (team_ev["index"] < cutoff)             # before the first substitution
     ].dropna(subset=["pass_recipient", "x", "y"])
 
     nodes = passes.groupby("player").agg(
